@@ -1,0 +1,107 @@
+core types: number, string, boolean, object, array, any
+custom types: enum, union, literals
+type casting Eg: 
+1) let age:number=23;
+2) let name:string="jamy";
+3) let marks:number[]=[12,34,56,78,90];
+4) let student:{name:string; age:number; marks:string[]} = {name:'jamy', age:23, marks:[23,34,56,78]};
+
+Inference Property: if a variable(let and var) is defined with number during declaration and somewhere if we give string value to that variable, 
+we will see a warning sign
+
+enum: Its a custum datatype that creates an object whose keys are mapped to its index values and vice versa. They are mainly used when we want to map values
+with strings so that we can use those values instead of strings.
+enum_declaration_syntax: enum <captalized_variable_name> {key1, key2, key3}
+Eg: 
+enum Role {admin, user, superUser};
+console.log(Role) //
+{
+    0: "admin",
+    1: "user",
+    2: "super_user",
+    admin: 0,
+    user: 1,
+    super_user: 2
+}
+console.log(Role[0]) // "admin"
+console.log(Role.admin ) // 0
+
+type union: this is the concept of type casting different types for a same variable or parameter(in case of function)
+Eg:
+let phNumber:string | number;
+phNumber=9629002859;
+phNumber="9629002859";
+
+type literals: consider a senario where a function is accepting 2 arguments and the 2nd argument that will be recieved should have only either of the two 
+values namely 'text', 'number'. We can achieve this using literals
+Eg:
+const fun = (x:number|string, returnType:'text'|'number')=>{
+    switch(returnType){
+        case 'text':
+        return x.toString();
+
+        case 'number':
+        return +x;
+
+        default:
+        break;
+    }
+}
+console.log(typeof fun("7","number")) // number
+console.log(typeof fun(7,"text"))     // string
+console.log(typeof fun(7,"txt"))      // shows warning becuz 2nd arg of fun should have value either 'text' or 'number'
+
+type alias/custom type: Type aliases can be used to "create" your own types. This type allows us to write type union or type literals in more efficient way.
+syntax: type <captalized_variable_name> = <core type1/value1> | <core type2/value2> | <core type3/value3>
+Eg:
+consider the above example, we can write more readable version af the above code as follows,
+type Combinable = number|string;
+type ReturnValTypes = 'text'|'number';
+const fun = (x:Combinable, returnType:ReturnValTypes)=>{
+switch(returnType){
+    case 'text':
+    return x.toString();
+
+    case 'number':
+    return +x;
+
+    default:
+    break;
+}
+}
+console.log(typeof fun("7","number")) // number
+console.log(typeof fun(7,"text"))     // string
+You're not limited to storing union types though you can also provide an alias to a (possibly complex) object type.
+Eg:
+type User = { name: string; age: number };
+const u1: User = { name: 'Max', age: 30 }; 
+
+
+FUNCTIONS AS TYPES:
+In js it is possible to assign a variable to function which will point that function like below,
+const sum=(a:number, b:number):number => {
+    return a+b
+}
+let add=sum;
+console.log(add(5,6));
+In the above example there is a possibility that we may end up assiging a different function to add variable instead of required function and we wont 
+get warning from typescript. To prevent this, we will type cast what kind of function does add variable takes in, this will produce warning if we 
+exceeds the type.
+eg:
+const sum=(a:number, b:number):number => {
+    return a+b
+}
+const printFunction=(num:number):void => {
+    console.log(num)
+}
+let add: (a: number, b: number) => number;
+add=sum;
+add=printFunction //shows warning becuz we told ts that add should hold only the function that takes 2 numbers and gives out number
+
+TypeCasting in callbacks:
+const sum=(a:number, b:number, cb:(num:number) => void)=>{
+    let result = a+b;
+    cb(result);
+}
+sum(10,20,(val)=>{console.log(val)});
+
